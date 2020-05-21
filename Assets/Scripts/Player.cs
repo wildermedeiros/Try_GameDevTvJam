@@ -17,14 +17,19 @@ public class Player : MonoBehaviour
         Normal, 
         Attacking,
     }
-    
+
+    [Header("General")]
     [SerializeField] float runSpeed = 5f;
     [SerializeField] float jumpSpeed = 5f;
+
+    [Header("Attack")]
     [SerializeField] Transform attackPoint;
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] float attackRange = 2f;
     [SerializeField] int attackDamage = 40;
     [SerializeField] float attackRate = 2f; // two attacks per/sec
+
+    [Header("Dash")]
     [SerializeField] float startDashTime = 0.1f;
     [SerializeField] float dashSpeed = 50f;
 
@@ -34,8 +39,6 @@ public class Player : MonoBehaviour
     Vector2 movementInput;
     InputAction dash;
     InputAction attack;
-    
-
 
     private void Awake() {
         playerInputActions = new PlayerInputActions();
