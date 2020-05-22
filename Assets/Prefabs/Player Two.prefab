@@ -46,8 +46,8 @@ GameObject:
   - component: {fileID: 1006357793439263725}
   - component: {fileID: 1439757290}
   m_Layer: 0
-  m_Name: Player 2
-  m_TagString: Untagged
+  m_Name: Player Two
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,7 +104,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -363011313
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300008, guid: f2ed27d6c1c3ccc48959bcca269d88f0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -193,9 +193,12 @@ MonoBehaviour:
     m_Bits: 2048
   attackRange: 1
   attackDamage: 40
-  attackRate: 4
+  attackSpeed: 4
   startDashTime: 0.1
-  dashSpeed: 50
+  dashDistance: 50
+  GhostRate: 0.01
+  ghostPrefab: {fileID: 1726190823487043808, guid: a3d5470d686fe464cb55d962d7b65e3a,
+    type: 3}
 --- !u!114 &1439757290
 MonoBehaviour:
   m_ObjectHideFlags: 0

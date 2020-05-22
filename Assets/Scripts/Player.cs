@@ -27,12 +27,20 @@ public class Player : MonoBehaviour
     [SerializeField] LayerMask enemyLayers;
     [SerializeField] float attackRange = 2f;
     [SerializeField] int attackDamage = 40;
-    [SerializeField] float attackRate = 2f; // two attacks per/sec
+    [SerializeField] float attackSpeed = 2f; // two attacks per/sec
 
     [Header("Dash")]
+    [Tooltip("Tempo que ficará dando dash")]
     [SerializeField] float startDashTime = 0.1f;
-    [SerializeField] float dashSpeed = 50f;
+    [SerializeField] float dashDistance = 50f;
 
+    [Header("GhostEffect")]
+    [SerializeField] float GhostRate = 0.01f;
+    [SerializeField] GameObject ghostPrefab;
+
+
+    // TODO better naming those variables 
+    float ghostTime = 0;
     float direction = 0;
     float dashTime = 0;
     float nextAttackTime = 0;
@@ -57,6 +65,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         myCapsuleCollider2D = GetComponent<CapsuleCollider2D>();
         dashTime = startDashTime;
+        ghostTime = GhostRate;
     }
 
     void Update()
@@ -66,6 +75,7 @@ public class Player : MonoBehaviour
         FlipCharacterSprite();
         Dash();
         Attack();
+        //GhostEffect();
     }
 
     void Dash()
@@ -101,15 +111,18 @@ public class Player : MonoBehaviour
 
                 if (direction == 2)
                 {
-                    rigidBody2D.velocity = Vector2.right * dashSpeed;
+                    rigidBody2D.velocity = Vector2.right * dashDistance;
+                    GhostEffect();
                 } 
                 else if (direction == 3)
                 {
-                    rigidBody2D.velocity = Vector2.left * dashSpeed;
+                    rigidBody2D.velocity = Vector2.left * dashDistance;
+                    GhostEffect();
                 }
                 else if (direction == transform.localScale.x)
                 {
-                    rigidBody2D.velocity = new Vector2(transform.localScale.x * dashSpeed, rigidBody2D.velocity.y);
+                    rigidBody2D.velocity = new Vector2(transform.localScale.x * dashDistance, rigidBody2D.velocity.y);
+                    GhostEffect();
                 }
             }
         }
@@ -129,7 +142,7 @@ public class Player : MonoBehaviour
                 {
                     enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
                 }
-                nextAttackTime = Time.time + 1f / attackRate;
+                nextAttackTime = Time.time + 1f / attackSpeed;
                 //sound effect 
                 //vfx
             }
@@ -193,6 +206,24 @@ public class Player : MonoBehaviour
 
     private void OnDisable() {
         playerInputActions.PlayerControls.Disable();
+    }
+
+    void GhostEffect()
+    {
+        if (ghostTime > 0) 
+        {
+            ghostTime -= Time.deltaTime;
+        } 
+        else 
+        {
+            GameObject currentGhost = Instantiate(ghostPrefab, transform.position, transform.rotation);
+            currentGhost.transform.localScale = transform.localScale;
+            Sprite currentPlayerSprite = GetComponent<SpriteRenderer>().sprite;
+            currentGhost.GetComponent<SpriteRenderer>().sprite = currentPlayerSprite;
+            
+            ghostTime = GhostRate;
+            Destroy(currentGhost, 1f);
+        }
     }
 }
 

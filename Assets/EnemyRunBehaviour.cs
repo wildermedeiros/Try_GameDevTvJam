@@ -24,8 +24,6 @@ public class EnemyRunBehaviour : StateMachineBehaviour
         Vector2 target = new Vector2(player.position.x, rigidBody2D.position.y);
         Vector2 newPosition = Vector2.MoveTowards(rigidBody2D.position, target, movimentSpeed * Time.fixedDeltaTime);
         rigidBody2D.MovePosition(newPosition);
-
-        
     }
 
     //OnStateExit is called when a transition ends and the state machine finishes evaluating this state
