@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rigidBody2D;
     Animator animator;
     Collider2D myCapsuleCollider2D;
+    AudioSource audioSource;
 
     State state; 
 
@@ -64,6 +65,7 @@ public class Player : MonoBehaviour
         rigidBody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         myCapsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        audioSource = GetComponent<AudioSource>();
         dashTime = startDashTime;
         ghostTime = GhostRate;
     }
@@ -78,13 +80,97 @@ public class Player : MonoBehaviour
         //GhostEffect();
     }
 
+    void Attack()
+    {
+        if (attack.triggered)
+        {
+            if (Time.time >= nextAttackTime)
+            {
+                //state = State.Attacking;
+                animator.SetTrigger("Attack");
+                PlaySoundEffect();
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+                foreach (var enemy in hitEnemies)
+                {
+                    enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+                }
+                nextAttackTime = Time.time + 1f / attackSpeed;
+            }
+        }
+    }
+
+    void PlaySoundEffect()
+    {
+        //audioSource.PlayOneShot()
+    }
+
+    private void OnDrawGizmosSelected() {
+        if(attackPoint == null) { return; }
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    void Jump()
+    {
+        bool isGrounded = myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        
+        if(!isGrounded){ return; }
+
+        float yVelocity = jumpSpeed;
+        Vector2 jumpVelocity = new Vector2(0, yVelocity);
+        //rigidBody2D.AddForce(new Vector2(0, yVelocity));
+        rigidBody2D.velocity += jumpVelocity;
+    }
+
+    void GroundCheckForJumpAnimation(){
+        
+        if (!myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        {
+            animator.SetBool("Jump", true);
+        }
+        else
+        {
+            animator.SetBool("Jump", false);
+        }
+    }
+
+    void Run()
+    {
+        //float controlThrow = Input.GetAxis("Horizontal");
+        float controlThrow = movementInput.x;
+        float xVelocity = controlThrow * runSpeed;
+
+        Vector2 playerVelocity = new Vector2(xVelocity, rigidBody2D.velocity.y);
+        rigidBody2D.velocity = playerVelocity;
+
+        bool playerHasHorizontalSpeed = Mathf.Abs(rigidBody2D.velocity.x) > Mathf.Epsilon;
+        animator.SetBool("Running", playerHasHorizontalSpeed); 
+    }
+
+    void FlipCharacterSprite()
+    {
+        bool playerHasHorizontalSpeed = Mathf.Abs(rigidBody2D.velocity.x) > Mathf.Epsilon;
+        if (playerHasHorizontalSpeed)
+        {
+            transform.localScale = new Vector2(Mathf.Sign(rigidBody2D.velocity.x), transform.localScale.y);
+        }
+    }
+
+    private void OnEnable() {
+        playerInputActions.PlayerControls.Enable();
+    }
+
+    private void OnDisable() {
+        playerInputActions.PlayerControls.Disable();
+    }
+
     void Dash()
     {
         if(direction == 0)
         {
             if (dash.triggered)
             {
-                Debug.Log("dash");
+                StartCoroutine(StartDashingSequence());
                 if(movementInput.x > 0)
                 {
                     direction = 2;
@@ -128,84 +214,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Attack()
-    {
-        if (attack.triggered)
-        {
-            Debug.Log("attack");
-            if (Time.time >= nextAttackTime)
-            {
-                state = State.Attacking;
-                animator.SetTrigger("Attack");
-                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-                foreach (var enemy in hitEnemies)
-                {
-                    enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-                }
-                nextAttackTime = Time.time + 1f / attackSpeed;
-                //sound effect 
-                //vfx
-            }
-        }
-    }
+    IEnumerator StartDashingSequence(){
+        SendMessage("OnDashing", true);
+        Physics2D.IgnoreLayerCollision(11, 12, true);
 
-    private void OnDrawGizmosSelected() {
-        if(attackPoint == null) { return; }
+        yield return new WaitForSeconds(0.5f);
 
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
-
-    void Jump()
-    {
-        bool isGrounded = myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        
-        if(!isGrounded){ return; }
-
-        float yVelocity = jumpSpeed;
-        Vector2 jumpVelocity = new Vector2(0, yVelocity);
-        //rigidBody2D.AddForce(new Vector2(0, yVelocity));
-        rigidBody2D.velocity += jumpVelocity;
-    }
-
-    void GroundCheckForJumpAnimation(){
-        if (!myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            animator.SetBool("Jump", true);
-        }
-        else
-        {
-            animator.SetBool("Jump", false);
-        }
-    }
-
-    void Run()
-    {
-        //float controlThrow = Input.GetAxis("Horizontal");
-        float controlThrow = movementInput.x;
-        float xVelocity = controlThrow * runSpeed;
-
-        Vector2 playerVelocity = new Vector2(xVelocity, rigidBody2D.velocity.y);
-        rigidBody2D.velocity = playerVelocity;
-
-        bool playerHasHorizontalSpeed = Mathf.Abs(rigidBody2D.velocity.x) > Mathf.Epsilon;
-        animator.SetBool("Running", playerHasHorizontalSpeed); 
-    }
-
-    void FlipCharacterSprite()
-    {
-        bool playerHasHorizontalSpeed = Mathf.Abs(rigidBody2D.velocity.x) > Mathf.Epsilon;
-        if (playerHasHorizontalSpeed)
-        {
-            transform.localScale = new Vector2(Mathf.Sign(rigidBody2D.velocity.x), transform.localScale.y);
-        }
-    }
-
-    private void OnEnable() {
-        playerInputActions.PlayerControls.Enable();
-    }
-
-    private void OnDisable() {
-        playerInputActions.PlayerControls.Disable();
+        SendMessage("OnDashing", false);
+        Physics2D.IgnoreLayerCollision(11, 12, false);
     }
 
     void GhostEffect()
@@ -225,5 +241,6 @@ public class Player : MonoBehaviour
             Destroy(currentGhost, 1f);
         }
     }
+
 }
 
