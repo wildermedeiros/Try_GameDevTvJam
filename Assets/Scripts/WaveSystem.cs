@@ -17,8 +17,8 @@ public class WaveSystem : MonoBehaviour
     }
 
     [SerializeField] float textPadding = 3f;
-    [SerializeField] GameObject textGameObject;
-    [SerializeField] TextMeshPro remainTimeText;
+    //[SerializeField] GameObject textGameObject;
+    [SerializeField] TextMeshProUGUI remainTimeText;
     [SerializeField] Wave[] waves;
     [SerializeField] Transform[] spawnPositions;
     [SerializeField] float timeBetweenWaves = 1f;
@@ -52,24 +52,27 @@ public class WaveSystem : MonoBehaviour
 
     private void Update() 
     {
-        textGameObject.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + textPadding);
+        //textGameObject.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + textPadding);
+        timeLeftToWinTheWave -= Time.deltaTime;
+        remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
+        
+        if (timeLeftToWinTheWave <= 0)
+        {
+            // "lose" sequence
+            print("end game");
+        }
+
         if(state == spawnState.Waiting)
         {
-            timeLeftToWinTheWave -= Time.deltaTime;
-            remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
-
             if(!EnemyIsAlive() && timeLeftToWinTheWave > 0) // e o tempo não acabou
             {
                 // next wave
                 //Debug.Log("Wave completed");
-                //return;
                 SpawnNextWave();
                 //timeLeftToWinTheWave = timeToBeatTheWave;
             }
             else
             {
-                Debug.Log("Morreu");
-                // deathsequence
                 return;
             }
         }
@@ -94,7 +97,7 @@ public class WaveSystem : MonoBehaviour
 
         if (nextWave + 1 > waves.Length - 1)
         {
-            // finalsequence
+            // "win" sequence
             //nextWave = 0; caso queira resetar 
             Debug.Log("Cabou-se, looping");
             this.enabled = false;

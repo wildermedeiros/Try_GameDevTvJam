@@ -2,18 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
     Animator animator;
     Rigidbody2D rigidBody2D;
     Transform player;
-    AudioSource audioSource;
     CameraShake cameraShake;
+    AudioSource audioSource;
     
     [Header("Health")]
     [SerializeField] int maxHealth = 100;
     [SerializeField] float durationCameraShake = 0.3f;
+    [SerializeField] ParticleSystem deathEffect;
 
     [Header("Attack")]
     [SerializeField] int attackDamage = 20;
@@ -22,7 +24,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] LayerMask playerLayer;
     [SerializeField] Transform attackPoint;
     
-    [SerializeField] ParticleSystem deathEffect;
+    [Header("Sound")]
+    [SerializeField] AudioClip[] enemyDeathSFX;
 
     int currentHealth;
     float nextAttackTime = 0;
@@ -32,9 +35,9 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         rigidBody2D = GetComponent<Rigidbody2D>();
-        audioSource = GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         cameraShake = GameObject.FindObjectOfType<CameraShake>();
     }
@@ -68,7 +71,13 @@ public class Enemy : MonoBehaviour
 
     private void PlaySoundEffects()
     {
-        audioSource.Play();
+        float randomPitch = Random.Range(1.10f, 1.30f);
+        audioSource.pitch = randomPitch;
+
+        int index = Random.Range(0, enemyDeathSFX.Length);
+        audioSource.PlayOneShot(enemyDeathSFX[index]);
+
+        
     }
 
     // Event method

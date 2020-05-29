@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class Player : MonoBehaviour
     [SerializeField] float attackRange = 2f;
     [SerializeField] int attackDamage = 40;
     [SerializeField] float attackSpeed = 2f; // two attacks per/sec
+    [SerializeField] AudioClip attackSFX;
+    [SerializeField] AudioClip missAttackSFX;
+    [SerializeField] AudioClip dashSFX;
 
     [Header("Dash")]
     [Tooltip("Tempo que ficará dando dash")]
@@ -88,10 +92,11 @@ public class Player : MonoBehaviour
             {
                 //state = State.Attacking;
                 animator.SetTrigger("Attack");
-                PlaySoundEffect();
+                PlayAttackSoundEffect();
                 Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
                 foreach (var enemy in hitEnemies)
                 {
+                    PlaySoundEffectOnEnemy();
                     enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
                 }
                 nextAttackTime = Time.time + 1f / attackSpeed;
@@ -99,9 +104,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    void PlaySoundEffect()
+    private void PlayAttackSoundEffect()
     {
-        //audioSource.PlayOneShot()
+        //float randomPitch = Random.Range(1f, 1.15f);
+        audioSource.pitch = 1f;
+        audioSource.PlayOneShot(missAttackSFX);
+    }
+
+    void PlaySoundEffectOnEnemy()
+    {
+        audioSource.Stop();
+        float randomPitch = Random.Range(1f, 1.15f);
+        audioSource.pitch = randomPitch;
+        audioSource.PlayOneShot(attackSFX);
     }
 
     private void OnDrawGizmosSelected() {
@@ -170,7 +185,8 @@ public class Player : MonoBehaviour
         {
             if (dash.triggered)
             {
-                StartCoroutine(StartDashingSequence());
+                StartCoroutine(InvulnerableDashSequence());
+                PlayDashSoundEffect();
                 if(movementInput.x > 0)
                 {
                     direction = 2;
@@ -214,7 +230,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator StartDashingSequence(){
+    private void PlayDashSoundEffect()
+    {
+        audioSource.pitch = 1.15f;
+        audioSource.PlayOneShot(dashSFX);
+    }
+
+    IEnumerator InvulnerableDashSequence(){
         SendMessage("OnDashing", true);
         Physics2D.IgnoreLayerCollision(11, 12, true);
 

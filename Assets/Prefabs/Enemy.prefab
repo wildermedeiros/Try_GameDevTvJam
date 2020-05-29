@@ -4855,8 +4855,8 @@ GameObject:
   - component: {fileID: 1669187032689667752}
   - component: {fileID: 1669187032689667755}
   - component: {fileID: 1669187032689667751}
-  - component: {fileID: 1669187032689667754}
   - component: {fileID: 658044962}
+  - component: {fileID: 1669187032689667754}
   m_Layer: 11
   m_Name: Enemy
   m_TagString: Enemy
@@ -4986,27 +4986,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 1.14}
   m_Size: {x: 0.97, y: 2}
   m_Direction: 0
---- !u!114 &1669187032689667754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669187032689667750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6214b2257cd6c534fb92b51d7a144ead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  attackDamage: 10
-  attackRange: 0.85
-  attackSpeed: 3
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 4096
-  attackPoint: {fileID: 6206505608297149352}
-  deathEffect: {fileID: 89939017}
 --- !u!82 &658044962
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5017,10 +4996,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1416ccba93f088d4f9aecc712884f5a8, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.4
-  m_Pitch: 0.93
+  m_Volume: 1
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -5103,3 +5082,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1669187032689667754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669187032689667750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6214b2257cd6c534fb92b51d7a144ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  durationCameraShake: 0.01
+  deathEffect: {fileID: 89939017}
+  attackDamage: 10
+  attackRange: 0.85
+  attackSpeed: 3
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  attackPoint: {fileID: 6206505608297149352}
+  enemyDeathSFX:
+  - {fileID: 8300000, guid: c9897ccb8ec7d9448b5983a0d93dd28a, type: 3}
+  - {fileID: 8300000, guid: 371d1a7f28d376f4abcb14b5841d649f, type: 3}

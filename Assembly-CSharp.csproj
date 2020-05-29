@@ -50,6 +50,7 @@
      <Compile Include="Assets\Assets Store\Bandits - Pixel Art\Demo\Sensor_Bandit.cs" />
      <Compile Include="Assets\CameraDefaultBehaviour.cs" />
      <Compile Include="Assets\CameraShakeBehaviour.cs" />
+     <Compile Include="Assets\MusicController.cs" />
      <Compile Include="Assets\NoFlipText.cs" />
      <Compile Include="Assets\Scripts\BetterJumpController.cs" />
      <Compile Include="Assets\Scripts\Bullet.cs" />
