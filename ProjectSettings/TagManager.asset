@@ -45,6 +45,9 @@ TagManager:
   - name: Background
     uniqueID: 4159436401
     locked: 0
+  - name: Enemy
+    uniqueID: 302663193
+    locked: 0
   - name: GhostTrailEffect
     uniqueID: 311193311
     locked: 0
