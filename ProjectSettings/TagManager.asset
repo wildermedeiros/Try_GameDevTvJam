@@ -19,8 +19,8 @@ TagManager:
   - Ground
   - Enemy
   - Player
-  - 
-  - 
+  - Props
+  - Bullet
   - 
   - 
   - 
@@ -44,6 +44,15 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 4159436401
+    locked: 0
+  - name: Props
+    uniqueID: 3265336975
+    locked: 0
+  - name: DialogBox
+    uniqueID: 1037040305
+    locked: 0
+  - name: Text
+    uniqueID: 2238853447
     locked: 0
   - name: Enemy
     uniqueID: 302663193
