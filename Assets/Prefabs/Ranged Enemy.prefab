@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  stoppingDistance: 15
+  stoppingDistance: 30
   retreatDistance: 5
   bulletPrefab: {fileID: 5495062448791645273, guid: 169929dc07f8c174fa96eeb142c4358d,
     type: 3}

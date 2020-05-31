@@ -30,6 +30,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "RangedAttack",
+                    "type": "Button",
+                    "id": "a871e167-744a-4537-810b-7524975a7929",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Dash",
                     "type": "Button",
                     "id": "5eb545cf-20d5-4f6a-9072-068e921e9dba",
@@ -256,6 +264,28 @@
                     "processors": "",
                     "groups": "Keyboard and  Mouse",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c02bfa5-9a7f-4ea6-b8e9-9f6642819f42",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and  Mouse",
+                    "action": "RangedAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d49074bb-3878-4a61-9728-e929bc700b31",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "RangedAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

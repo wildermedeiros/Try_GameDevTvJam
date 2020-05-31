@@ -24,10 +24,15 @@ public class Bullet : MonoBehaviour
 
     void Update() 
     {
-        //transform.position = Vector2.MoveTowards(transform.position, target, bulletSpeed * Time.fixedDeltaTime);
         Vector2 newPosition = Vector2.MoveTowards(rigidBody2D.position, target, bulletSpeed * Time.fixedDeltaTime);
         rigidBody2D.MovePosition(newPosition);
 
+        if (transform.position.x == target.x && transform.position.y == target.y)
+        {
+            GameObject impact = Instantiate(impactPrefab, transform.position, Quaternion.identity);
+            Destroy(impact, 1f);
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
@@ -38,9 +43,9 @@ public class Bullet : MonoBehaviour
         {
             playerHealth.TakeDamage(damage);
         }
+        
         GameObject impact = Instantiate(impactPrefab, transform.position, Quaternion.identity);
         Destroy(impact, 1f);
         Destroy(gameObject);
-
     }
 }

@@ -53,6 +53,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnParticleCollision(GameObject other) {
+        Debug.Log("ai tomei hit");
+    }
+
     private void StartDeathSequence()
     {
         animator.SetBool("Dead", true);
@@ -76,8 +80,6 @@ public class Enemy : MonoBehaviour
 
         int index = Random.Range(0, enemyDeathSFX.Length);
         audioSource.PlayOneShot(enemyDeathSFX[index]);
-
-        
     }
 
     // Event method

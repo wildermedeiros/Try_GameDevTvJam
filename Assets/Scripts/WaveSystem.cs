@@ -12,7 +12,9 @@ public class WaveSystem : MonoBehaviour
     public class Wave {
         public string name;
         public Transform enemy;
+        public Transform enemyType2;
         public int count;
+        public int countType2;
         public float rate;
     }
 
@@ -21,6 +23,7 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] TextMeshProUGUI remainTimeText;
     [SerializeField] Wave[] waves;
     [SerializeField] Transform[] spawnPositions;
+    [SerializeField] Transform[] spawnTurretsPoint;
     [SerializeField] float timeBetweenWaves = 1f;
     [SerializeField] float waveCountdown;
     [SerializeField] float timeToBeatTheWave = 30f;
@@ -47,23 +50,27 @@ public class WaveSystem : MonoBehaviour
         remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
+
         
     }
 
     private void Update() 
     {
         //textGameObject.transform.position = new Vector2(player.transform.position.x, player.transform.position.y + textPadding);
-        timeLeftToWinTheWave -= Time.deltaTime;
-        remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
-        
+
         if (timeLeftToWinTheWave <= 0)
         {
+            remainTimeText.text = "0.0f";
+            // e reseta a cena
             // "lose" sequence
             print("end game");
         }
 
         if(state == spawnState.Waiting)
         {
+            timeLeftToWinTheWave -= Time.deltaTime;
+            remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
+
             if(!EnemyIsAlive() && timeLeftToWinTheWave > 0) // e o tempo não acabou
             {
                 // next wave
@@ -115,7 +122,13 @@ public class WaveSystem : MonoBehaviour
         for (int i = 0; i < wave.count; i++)
         {
             SpawnEnemy(wave.enemy);
-            yield return new WaitForSeconds(1 / wave.rate); ;
+            yield return new WaitForSeconds(1 / wave.rate);
+        }
+
+        for (int i = 0; i < wave.countType2; i++)
+        {
+            SpawnTurret(wave.enemyType2);
+            yield return new WaitForSeconds(1 / wave.rate);
         }
 
         state = spawnState.Waiting;
@@ -126,8 +139,21 @@ public class WaveSystem : MonoBehaviour
     private void SpawnEnemy(Transform enemy)
     {
         Debug.Log("Spawn enemy");  
-        int index = Random.Range(0, spawnPositions.Length); 
-        Instantiate(enemy, spawnPositions[index].position, Quaternion.identity);
+        if(enemy != null)
+        {
+            int index = Random.Range(0, spawnPositions.Length); 
+            Instantiate(enemy, spawnPositions[index].position, Quaternion.identity);
+        }
+    }
+
+    void SpawnTurret(Transform enemyType2)
+    {
+        Debug.Log("Spawn enemy");
+        if (enemyType2 != null)
+        {
+            int index = Random.Range(0, spawnTurretsPoint.Length);
+            Instantiate(enemyType2, spawnTurretsPoint[index].position, Quaternion.identity);
+        }
     }
 
     bool EnemyIsAlive()
@@ -142,5 +168,10 @@ public class WaveSystem : MonoBehaviour
             }
         }
         return true;
+    }
+    
+    void IEnumerator () 
+    {
+
     }
 }

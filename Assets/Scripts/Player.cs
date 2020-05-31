@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject ghostPrefab;
 
 
+
     // TODO better naming those variables 
     float ghostTime = 0;
     float direction = 0;
@@ -97,7 +98,15 @@ public class Player : MonoBehaviour
                 foreach (var enemy in hitEnemies)
                 {
                     PlaySoundEffectOnEnemy();
-                    enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+                    if (enemy.GetComponent<Enemy>() != null) 
+                    {
+                        enemy.GetComponent<Enemy>().TakeDamage(attackDamage); 
+                    }
+
+                    if(enemy.GetComponent<Turret>() != null)
+                    {
+                        enemy.GetComponent<Turret>().TakeDamage(attackDamage);
+                    }
                 }
                 nextAttackTime = Time.time + 1f / attackSpeed;
             }
@@ -106,7 +115,6 @@ public class Player : MonoBehaviour
 
     private void PlayAttackSoundEffect()
     {
-        //float randomPitch = Random.Range(1f, 1.15f);
         audioSource.pitch = 1f;
         audioSource.PlayOneShot(missAttackSFX);
     }

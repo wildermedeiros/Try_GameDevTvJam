@@ -6,27 +6,34 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     Animator animator;
+
     [SerializeField] CameraShake cameraShake;
+    [SerializeField] HealthBar healthBar;
 
     [SerializeField] int maxHealth = 100;
     [SerializeField] int currentHealth;
     [SerializeField] float durationCameraShake = 0.3f;
     
     bool isInvulnerable = false;
+    bool isDead = false;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     public void TakeDamage(int damage)
     {
         if(isInvulnerable){ return; }
 
+        if(isDead) {return; }
 
         currentHealth -= damage;
         animator.SetTrigger("Hurt");
+        healthBar.SetHealth(currentHealth);
+
         StartCoroutine(cameraShake.ShakeCamera(durationCameraShake));
         StartCoroutine(StopTimeInDamage());
 
@@ -39,6 +46,7 @@ public class PlayerHealth : MonoBehaviour
     private void StartDeathSequence()
     {
         animator.SetBool("isDead", true);
+        isDead = true;
         //PlaySoundEffects();
         //PlayParticleEffects();
         //GetComponent<Collider2D>().enabled = false;

@@ -5,10 +5,35 @@ using UnityEngine;
 public class MusicController : MonoBehaviour
 {
     [SerializeField] AudioClip[] backgroundMusic;
+
+    AudioSource audioSource;
+
+    float timePlaying;
     
+    private void Awake() 
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void Start()
     {
-        int index = Random.Range(0, backgroundMusic.Length);        
-        GetComponent<AudioSource>().PlayOneShot(backgroundMusic[index]);
+        PlayBackgroundMusic();
+    }
+
+    private void PlayBackgroundMusic()
+    {
+        int index = Random.Range(0, backgroundMusic.Length);
+        audioSource.PlayOneShot(backgroundMusic[index]);
+    }
+
+    private void Update()
+    {
+        // timePlaying += Time.deltaTime;
+
+        // if (timePlaying > audioSource.clip.length)
+        // {
+        //     PlayBackgroundMusic();
+        //     timePlaying = 0f;
+        // }
     }
 }

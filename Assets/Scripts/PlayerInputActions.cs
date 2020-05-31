@@ -43,6 +43,14 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""RangedAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""a871e167-744a-4537-810b-7524975a7929"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""5eb545cf-20d5-4f6a-9072-068e921e9dba"",
@@ -271,6 +279,28 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c02bfa5-9a7f-4ea6-b8e9-9f6642819f42"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and  Mouse"",
+                    ""action"": ""RangedAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d49074bb-3878-4a61-9728-e929bc700b31"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""RangedAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -305,6 +335,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_PlayerControls_Movement = m_PlayerControls.FindAction("Movement", throwIfNotFound: true);
         m_PlayerControls_Jump = m_PlayerControls.FindAction("Jump", throwIfNotFound: true);
         m_PlayerControls_Attack = m_PlayerControls.FindAction("Attack", throwIfNotFound: true);
+        m_PlayerControls_RangedAttack = m_PlayerControls.FindAction("RangedAttack", throwIfNotFound: true);
         m_PlayerControls_Dash = m_PlayerControls.FindAction("Dash", throwIfNotFound: true);
     }
 
@@ -358,6 +389,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_PlayerControls_Movement;
     private readonly InputAction m_PlayerControls_Jump;
     private readonly InputAction m_PlayerControls_Attack;
+    private readonly InputAction m_PlayerControls_RangedAttack;
     private readonly InputAction m_PlayerControls_Dash;
     public struct PlayerControlsActions
     {
@@ -366,6 +398,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_PlayerControls_Movement;
         public InputAction @Jump => m_Wrapper.m_PlayerControls_Jump;
         public InputAction @Attack => m_Wrapper.m_PlayerControls_Attack;
+        public InputAction @RangedAttack => m_Wrapper.m_PlayerControls_RangedAttack;
         public InputAction @Dash => m_Wrapper.m_PlayerControls_Dash;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
@@ -385,6 +418,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Attack.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnAttack;
+                @RangedAttack.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnRangedAttack;
+                @RangedAttack.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnRangedAttack;
+                @RangedAttack.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnRangedAttack;
                 @Dash.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnDash;
                 @Dash.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnDash;
                 @Dash.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnDash;
@@ -401,6 +437,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @RangedAttack.started += instance.OnRangedAttack;
+                @RangedAttack.performed += instance.OnRangedAttack;
+                @RangedAttack.canceled += instance.OnRangedAttack;
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
@@ -431,6 +470,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnRangedAttack(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
     }
 }
