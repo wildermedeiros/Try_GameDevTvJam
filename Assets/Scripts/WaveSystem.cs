@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Playables;
 
 public class WaveSystem : MonoBehaviour
 {
@@ -29,6 +30,10 @@ public class WaveSystem : MonoBehaviour
     [SerializeField] float timeToBeatTheWave = 30f;
     [SerializeField] float timeLeftToWinTheWave;
 
+    [Header("Sequences")]
+    [SerializeField] PlayableDirector endSequence;
+    [SerializeField] PlayableDirector WinSequence;
+
     enum spawnState
     {
         Couting,
@@ -49,9 +54,8 @@ public class WaveSystem : MonoBehaviour
         timeLeftToWinTheWave = timeToBeatTheWave;
         remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
-
-        
+        remainTimeText.enabled = false;
+        //endSequence.enabled = false;
     }
 
     private void Update() 
@@ -64,11 +68,16 @@ public class WaveSystem : MonoBehaviour
             // e reseta a cena
             // "lose" sequence
             print("end game");
+            //endSequence.enabled = true;
+            SearchForEnemies();
+            endSequence.Play();
+            //this.enabled = false;
         }
 
         if(state == spawnState.Waiting)
         {
             timeLeftToWinTheWave -= Time.deltaTime;
+            remainTimeText.enabled = true;
             remainTimeText.text = timeLeftToWinTheWave.ToString("0.0");
 
             if(!EnemyIsAlive() && timeLeftToWinTheWave > 0) // e o tempo não acabou
@@ -107,6 +116,7 @@ public class WaveSystem : MonoBehaviour
             // "win" sequence
             //nextWave = 0; caso queira resetar 
             Debug.Log("Cabou-se, looping");
+            WinSequence.Play();
             this.enabled = false;
         }
         else
@@ -168,6 +178,21 @@ public class WaveSystem : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void SearchForEnemies()
+    {
+        searchCountdown -= Time.deltaTime;
+        if (searchCountdown <= 0)
+        {
+            searchCountdown = 1f;
+            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (var enemy in enemys)
+            {
+                enemy.SetActive(false);
+            }
+
+        }
     }
     
     void IEnumerator () 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -13,7 +14,10 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] int maxHealth = 100;
     [SerializeField] int currentHealth;
     [SerializeField] float durationCameraShake = 0.3f;
-    
+
+    [SerializeField] PlayableDirector endSequence;
+
+    float searchCountdown = 1f;
     bool isInvulnerable = false;
     bool isDead = false;
 
@@ -47,10 +51,11 @@ public class PlayerHealth : MonoBehaviour
     {
         animator.SetBool("isDead", true);
         isDead = true;
+        endSequence.Play();
         //PlaySoundEffects();
         //PlayParticleEffects();
         //GetComponent<Collider2D>().enabled = false;
-        this.enabled = false;      
+        //this.enabled = false;
     }
 
     IEnumerator StopTimeInDamage()
@@ -65,5 +70,19 @@ public class PlayerHealth : MonoBehaviour
     void OnDashing(bool modifier) // string reference
     {
         isInvulnerable = modifier;
+    }
+
+    public void SearchForEnemies()
+    {
+        searchCountdown -= Time.deltaTime;
+        if (searchCountdown <= 0)
+        {
+            searchCountdown = 1f;
+            GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (var enemy in enemys)
+            {
+                enemy.SetActive(false);
+            }
+        }
     }
 }

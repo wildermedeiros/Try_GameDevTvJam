@@ -23,17 +23,18 @@ public class MusicController : MonoBehaviour
     private void PlayBackgroundMusic()
     {
         int index = Random.Range(0, backgroundMusic.Length);
-        audioSource.PlayOneShot(backgroundMusic[index]);
+        audioSource.clip = backgroundMusic[index];
+        audioSource.Play();
     }
 
     private void Update()
     {
-        // timePlaying += Time.deltaTime;
+        timePlaying += Time.deltaTime;
 
-        // if (timePlaying > audioSource.clip.length)
-        // {
-        //     PlayBackgroundMusic();
-        //     timePlaying = 0f;
-        // }
+        if (timePlaying > audioSource.clip.length)
+        {
+            PlayBackgroundMusic();
+            timePlaying = 0f;
+        }
     }
 }
